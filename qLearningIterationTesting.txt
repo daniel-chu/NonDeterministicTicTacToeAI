@@ -1,0 +1,91 @@
+This shows how increasing iterations affected the Q-Learning Agent's effectiveness.
+Each configuration is run 10 times to minimize effects of outlier training results skewing the data.
+Total stats will be summed and shown here.
+
+====================
+Standard
+====================
+
+-p1 random -p2 qlearning --trainingAgentStrategy random --gamemode standard --iterations 10 --learningRate 0.3 --exploreRate 0.3 --trainingIterations 10
+X wins: 53
+O wins: 31
+Draws: 16
+
+-p1 random -p2 qlearning --trainingAgentStrategy random --gamemode standard --iterations 10 --learningRate 0.3 --exploreRate 0.3 --trainingIterations 50
+X wins: 49
+O wins: 37
+Draws: 14
+
+-p1 random -p2 qlearning --trainingAgentStrategy random --gamemode standard --iterations 10 --learningRate 0.3 --exploreRate 0.3 --trainingIterations 100
+X wins: 44
+O wins: 45
+Draws: 11
+
+-p1 random -p2 qlearning --trainingAgentStrategy random --gamemode standard --iterations 10 --learningRate 0.3 --exploreRate 0.3 --trainingIterations 500
+X wins: 40
+O wins: 48
+Draws: 12
+
+-p1 random -p2 qlearning --trainingAgentStrategy random --gamemode standard --iterations 10 --learningRate 0.3 --exploreRate 0.3 --trainingIterations 1000
+X wins: 26
+O wins: 58
+Draws: 16
+
+-p1 random -p2 qlearning --trainingAgentStrategy random --gamemode standard --iterations 10 --learningRate 0.3 --exploreRate 0.3 --trainingIterations 5000
+X wins: 4
+O wins: 76
+Draws: 20
+
+-p1 random -p2 qlearning --trainingAgentStrategy random --gamemode standard --iterations 10 --learningRate 0.3 --exploreRate 0.3 --trainingIterations 10000
+X wins: 2
+O wins: 90
+Draws: 8
+
+-p1 random -p2 qlearning --trainingAgentStrategy random --gamemode standard --iterations 10 --learningRate 0.3 --exploreRate 0.3 --trainingIterations 50000
+X wins: 4
+O wins: 89
+Draws: 7
+
+====================
+RandomX
+====================
+
+-p1 random -p2 qlearning --trainingAgentStrategy random --gamemode randomX --iterations 10 --learningRate 0.3 --exploreRate 0.3 --trainingIterations 10
+X wins: 55
+O wins: 33
+Draws: 12
+
+-p1 random -p2 qlearning --trainingAgentStrategy random --gamemode randomX --iterations 10 --learningRate 0.3 --exploreRate 0.3 --trainingIterations 50
+X wins: 55
+O wins: 35
+Draws: 10
+
+-p1 random -p2 qlearning --trainingAgentStrategy random --gamemode randomX --iterations 10 --learningRate 0.3 --exploreRate 0.3 --trainingIterations 100
+X wins: 50
+O wins: 32
+Draws: 18
+
+-p1 random -p2 qlearning --trainingAgentStrategy random --gamemode randomX --iterations 10 --learningRate 0.3 --exploreRate 0.3 --trainingIterations 500
+X wins: 47
+O wins: 36
+Draws: 17
+
+-p1 random -p2 qlearning --trainingAgentStrategy random --gamemode randomX --iterations 10 --learningRate 0.3 --exploreRate 0.3 --trainingIterations 1000
+X wins: 34
+O wins: 49
+Draws: 7
+
+-p1 random -p2 qlearning --trainingAgentStrategy random --gamemode randomX --iterations 10 --learningRate 0.3 --exploreRate 0.3 --trainingIterations 5000
+X wins: 36
+O wins: 56
+Draws: 8
+
+-p1 random -p2 qlearning --trainingAgentStrategy random --gamemode randomX --iterations 10 --learningRate 0.3 --exploreRate 0.3 --trainingIterations 10000
+X wins: 33
+O wins: 60
+Draws: 7
+
+-p1 random -p2 qlearning --trainingAgentStrategy random --gamemode randomX --iterations 10 --learningRate 0.3 --exploreRate 0.3 --trainingIterations 50000
+X wins: 28
+O wins: 64
+Draws: 8
