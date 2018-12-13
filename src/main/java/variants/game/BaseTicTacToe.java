@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import models.IntPair;
 import models.Marker;
 import models.Player;
+import models.exceptions.InvalidMoveException;
 import variants.board.Board;
 
 public abstract class BaseTicTacToe implements TicTacToe {
@@ -36,7 +37,12 @@ public abstract class BaseTicTacToe implements TicTacToe {
           curPlayer.getMarker(),
           IntPair.getDisplayCoordinatesForPair(nextRequestedMove)
       ));
-      board = getNextBoardForMove(nextRequestedMove);
+      try {
+        board = getNextBoardForMove(nextRequestedMove);
+      } catch (InvalidMoveException e) {
+        System.out.println(e.getMessage());
+        continue;
+      }
       Optional<Marker> maybeWinner = board.getWinner();
       if (maybeWinner.isPresent()) {
         System.out.println(board.getDisplayAsString());
@@ -63,6 +69,9 @@ public abstract class BaseTicTacToe implements TicTacToe {
     double rand = Math.random();
 
     Map<Double, List<Board>> probsToBoards = nextStates.get(requestedMove);
+    if (probsToBoards == null) {
+      throw new InvalidMoveException("Invalid move, try again.");
+    }
     List<Double> probabilities = probsToBoards.keySet().stream()
         .sorted()
         .collect(Collectors.toList());

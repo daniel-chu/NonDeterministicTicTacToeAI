@@ -1,0 +1,80 @@
+This file contains test results for standard tic tac toe.
+
+Takeaways:
+- Random vs Random here shows around a 6:3:1 ratio of X wins : O wins : Draws, showing that first turn advantage is huge.
+- In a deterministic version of Tic Tac Toe, Search is extremely effective, and I was unable to tune the Q-Learning agent
+  to be able to defeat the Search Agent.
+- Both the Search and Q-Learning agents are able to easily defeat the Random agent.
+
+========================
+Random vs Random
+========================
+* Random vs Random results are useful as a benchmark to compare effectiveness of the AI agents
+-p1 random -p2 random --gamemode standard --iterations 10000 --depth 2
+X wins: 5938
+O wins: 2823
+Draws: 1239
+
+========================
+Random vs Search
+========================
+-p1 random -p2 search --gamemode standard --iterations 100 --depth 2
+X wins: 0
+O wins: 87
+Draws: 13
+
+========================
+Random vs QLearning
+========================
+-p1 random -p2 qlearning --trainingAgentStrategy random --gamemode standard --iterations 1000 --learningRate 0.3 --exploreRate 0.3 --trainingIterations 50000
+X wins: 23
+O wins: 899
+Draws: 78
+
+========================
+Search vs Random
+========================
+-p1 search -p2 random --gamemode standard --iterations 100 --depth 2
+X wins: 99
+O wins: 0
+Draws: 1
+
+========================
+Search vs Search
+========================
+-p1 search -p2 search --gamemode standard --iterations 100 --depth 2
+X wins: 0
+O wins: 0
+Draws: 100
+
+========================
+Search vs QLearning
+========================
+-p1 search -p2 qlearning --trainingAgentStrategy random --gamemode standard --iterations 100 --learningRate 0.3 --exploreRate 0.3 --trainingIterations 50000 --depth 2
+X wins: 45
+O wins: 0
+Draws: 55
+
+========================
+QLearning vs Random
+========================
+-p1 qlearning -p2 random --trainingAgentStrategy random --gamemode standard --iterations 1000 --learningRate 0.3 --exploreRate 0.3 --trainingIterations 50000
+X wins: 989
+O wins: 0
+Draws: 11
+
+========================
+QLearning vs Search
+========================
+-p1 qlearning -p2 search --trainingAgentStrategy random --gamemode standard --iterations 100 --learningRate 0.3 --exploreRate 0.3 --trainingIterations 50000 --depth 2
+X wins: 0
+O wins: 12
+Draws: 88
+
+========================
+QLearning vs QLearning
+========================
+-p1 qlearning -p2 qlearning --trainingAgentStrategy random --gamemode standard --iterations 1000 --learningRate 0.3 --exploreRate 0.3 --trainingIterations 50000
+X wins: 366
+O wins: 162
+Draws: 472

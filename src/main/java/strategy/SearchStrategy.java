@@ -1,4 +1,4 @@
-package strategy.search;
+package strategy;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -8,7 +8,6 @@ import java.util.Optional;
 
 import models.IntPair;
 import models.Marker;
-import strategy.Strategy;
 import variants.board.Board;
 
 public class SearchStrategy implements Strategy {
@@ -102,7 +101,7 @@ public class SearchStrategy implements Strategy {
     for (Double prob : probsToBoards.keySet()) {
       List<Board> possibleBoards = probsToBoards.get(prob);
       for (Board selectedBoard : possibleBoards) {
-        int nextDepth = selectedBoard.getCurTurn().equals(ownMarker)
+        int nextDepth = selectedBoard.getCurTurn().equals(Marker.O)
             ? depth - 1
             : depth;
         double val = getValueOfBoard(selectedBoard, ownMarker, nextDepth);

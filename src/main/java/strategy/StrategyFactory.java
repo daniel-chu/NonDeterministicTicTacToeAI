@@ -2,9 +2,6 @@ package strategy;
 
 import java.util.Optional;
 
-import strategy.learning.QLearningStrategy;
-import strategy.search.SearchStrategy;
-
 public class StrategyFactory {
   public static Strategy createStrategy(String strategy,
                                         int depth,

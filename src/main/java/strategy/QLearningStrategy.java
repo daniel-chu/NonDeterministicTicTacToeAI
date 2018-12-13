@@ -1,4 +1,4 @@
-package strategy.learning;
+package strategy;
 
 import java.util.ArrayList;
 import java.util.Collections;

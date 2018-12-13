@@ -38,12 +38,6 @@ public class HumanStrategy implements Strategy {
     throw new RuntimeException("wtf?");
   }
 
-
-  @Override
-  public void onGameEnd(Optional<Boolean> didWin) {
-    // nothing needs to be done for human player
-  }
-
   @Override
   public boolean isReady() {
     return true;
@@ -53,5 +47,11 @@ public class HumanStrategy implements Strategy {
   public void prep() {
     // nothing needs to be done for human player
   }
+  @Override
+  public void onGameEnd(Optional<Boolean> didWin) {
+    // nothing needs to be done for human player
+  }
+
+
 
 }
