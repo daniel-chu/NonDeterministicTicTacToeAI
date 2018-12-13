@@ -5,8 +5,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import models.IntPair;
 import models.Marker;
-import models.Pair;
 import models.Player;
 import variants.board.Board;
 
@@ -30,29 +30,36 @@ public abstract class BaseTicTacToe implements TicTacToe {
   public Optional<Marker> play() {
     initGame();
     while (true) {
-      Pair nextRequestedMove = curPlayer.getNextMove(board);
+      IntPair nextRequestedMove = curPlayer.getNextMove(board);
       System.out.println(String.format(
           "Player %s requested move %s\n",
           curPlayer.getMarker(),
-          Pair.getDisplayCoordinatesForPair(nextRequestedMove)
+          IntPair.getDisplayCoordinatesForPair(nextRequestedMove)
       ));
       board = getNextBoardForMove(nextRequestedMove);
-      Optional<Marker> winner = board.getWinner();
-      if (winner.isPresent()) {
+      Optional<Marker> maybeWinner = board.getWinner();
+      if (maybeWinner.isPresent()) {
         System.out.println(board.getDisplayAsString());
-        System.out.println(String.format("%s won!\n", winner.get().toString()));
-        return winner;
+        System.out.println(String.format("%s won!\n", maybeWinner.get().toString()));
+        onGameEndCallbacks(maybeWinner);
+        return maybeWinner;
       } else if (board.isGameOver()) {
         System.out.println(board.getDisplayAsString());
         System.out.println("Draw!\n");
+        onGameEndCallbacks(maybeWinner);
         return Optional.empty();
       }
       curPlayer = curPlayer.equals(playerOne) ? playerTwo : playerOne;
     }
   }
 
-  protected Board getNextBoardForMove(Pair requestedMove) {
-    Map<Pair, Map<Double, List<Board>>> nextStates = board.getNextStates();
+  protected void onGameEndCallbacks(Optional<Marker> maybeWinner) {
+    playerOne.onGameEnd(maybeWinner);
+    playerTwo.onGameEnd(maybeWinner);
+  }
+
+  protected Board getNextBoardForMove(IntPair requestedMove) {
+    Map<IntPair, Map<Double, List<Board>>> nextStates = board.getNextStates();
     double rand = Math.random();
 
     Map<Double, List<Board>> probsToBoards = nextStates.get(requestedMove);
@@ -69,6 +76,11 @@ public abstract class BaseTicTacToe implements TicTacToe {
       }
     }
     throw new RuntimeException("Error while selecting random move - sum of probabilities for states not equal to 1.0");
+  }
+
+  public void reset() {
+    board.reset();
+    curPlayer = playerOne;
   }
 
 }

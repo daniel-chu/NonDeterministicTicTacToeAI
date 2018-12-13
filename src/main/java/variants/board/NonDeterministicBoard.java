@@ -8,9 +8,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import models.IntPair;
 import models.Line;
 import models.Marker;
-import models.Pair;
 
 public abstract class NonDeterministicBoard extends BaseBoard {
 
@@ -28,7 +28,7 @@ public abstract class NonDeterministicBoard extends BaseBoard {
 
   public NonDeterministicBoard(Marker[][] board,
                                double mainMoveProbability,
-                               Map<Line, Pair> winmap,
+                               Map<Line, IntPair> winmap,
                                Marker curTurn,
                                Optional<Marker> winner) {
     super(board, winmap, curTurn, winner);
@@ -36,20 +36,20 @@ public abstract class NonDeterministicBoard extends BaseBoard {
   }
 
   @Override
-  public Set<Pair> getNextActions() {
+  public Set<IntPair> getNextActions() {
     return IntStream.range(0, 3)
         .mapToObj(i -> i)
         .flatMap(x -> IntStream.range(0, 3)
-            .mapToObj(y -> Pair.create(x, y)))
+            .mapToObj(y -> IntPair.create(x, y)))
         .filter(pair -> board[pair.getX()][pair.getY()] == null || getRandomCellsFromMove(pair).stream()
             .anyMatch(finalMove -> board[finalMove.getX()][finalMove.getY()] == null))
         .collect(Collectors.toSet());
   }
 
-  protected abstract Set<Pair> getRandomCellsFromMove(Pair pair);
+  protected abstract Set<IntPair> getRandomCellsFromMove(IntPair pair);
 
   @Override
-  public Map<Pair, Map<Double, List<Board>>> getNextStates() {
+  public Map<IntPair, Map<Double, List<Board>>> getNextStates() {
     return getNextActions().stream()
         .collect(Collectors.toMap(
             Function.identity(),

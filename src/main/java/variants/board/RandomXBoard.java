@@ -11,10 +11,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import models.ImmutablePair;
+import models.ImmutableIntPair;
+import models.IntPair;
 import models.Line;
 import models.Marker;
-import models.Pair;
 
 public class RandomXBoard extends NonDeterministicBoard {
 
@@ -28,7 +28,7 @@ public class RandomXBoard extends NonDeterministicBoard {
 
   public RandomXBoard(Marker[][] board,
                       double mainMoveProbability,
-                      Map<Line, Pair> winmap,
+                      Map<Line, IntPair> winmap,
                       Marker curTurn,
                       Optional<Marker> winner) {
     super(board, mainMoveProbability, winmap, curTurn, winner);
@@ -36,7 +36,7 @@ public class RandomXBoard extends NonDeterministicBoard {
 
   protected Map<Double, List<Board>> createPotentialBoardsForMove(int col,
                                                                   int row) {
-    List<Board> randBoards = getRandomCellsFromMove(Pair.create(col, row)).stream()
+    List<Board> randBoards = getRandomCellsFromMove(IntPair.create(col, row)).stream()
         .map(offsetPair -> {
           Board copy = copy();
           copy.makeMove(offsetPair.getX(), offsetPair.getY());
@@ -54,10 +54,10 @@ public class RandomXBoard extends NonDeterministicBoard {
   }
 
   @Override
-  protected Set<Pair> getRandomCellsFromMove(Pair pair) {
+  protected Set<IntPair> getRandomCellsFromMove(IntPair pair) {
     return Stream.of(-1, 1)
         .flatMap(xOffset -> Stream.of(-1, 1)
-            .map(yOffset -> Pair.create(pair.getX() + xOffset, pair.getY() + yOffset)))
+            .map(yOffset -> IntPair.create(pair.getX() + xOffset, pair.getY() + yOffset)))
         .filter(finalMove -> isMoveValid(finalMove.getX(), finalMove.getY()))
         .collect(Collectors.toSet());
   }
@@ -68,10 +68,10 @@ public class RandomXBoard extends NonDeterministicBoard {
     for (int i = 0; i < 3; i++) {
       copyBoard[i] = Arrays.copyOf(board[i], 3);
     }
-    Map<Line, Pair> copyWinmap = winmap.keySet().stream()
+    Map<Line, IntPair> copyWinmap = winmap.keySet().stream()
         .collect(Collectors.toMap(
             Function.identity(),
-            line -> ImmutablePair.builder().from(winmap.get(line)).build()
+            line -> ImmutableIntPair.builder().from(winmap.get(line)).build()
         ));
     return new RandomXBoard(copyBoard, mainMoveProbability, copyWinmap, curTurn, winner);
   }

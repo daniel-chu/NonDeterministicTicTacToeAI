@@ -1,9 +1,14 @@
 package strategy;
 
+import java.util.Optional;
+
+import models.IntPair;
 import models.Marker;
-import models.Pair;
 import variants.board.Board;
 
 public interface Strategy {
-  Pair getNextMove(Board board, Marker ownMarker);
+  IntPair getNextMove(Board board, Marker ownMarker);
+  void onGameEnd(Optional<Boolean> didWin);
+  boolean isReady();
+  void prep();
 }

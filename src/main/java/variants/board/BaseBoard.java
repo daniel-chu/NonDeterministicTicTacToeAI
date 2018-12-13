@@ -8,26 +8,24 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import models.ImmutablePair;
+import models.ImmutableIntPair;
+import models.IntPair;
 import models.Line;
 import models.Marker;
-import models.Pair;
 
 public abstract class BaseBoard implements Board {
 
   protected Marker[][] board;
-  protected Map<Line, Pair> winmap;
+  protected Map<Line, IntPair> winmap;
   protected Marker curTurn;
   protected Optional<Marker> winner;
 
   public BaseBoard() {
-    this.curTurn = Marker.X;
-    this.winner = Optional.empty();
     initialize();
   }
 
   public BaseBoard(Marker[][] board,
-                   Map<Line, Pair> winmap,
+                   Map<Line, IntPair> winmap,
                    Marker curTurn,
                    Optional<Marker> winner) {
     this.board = board;
@@ -37,11 +35,13 @@ public abstract class BaseBoard implements Board {
   }
 
   public void initialize() {
-    board = new Marker[3][3];
-    winmap = Arrays.stream(Line.values()).collect(Collectors.toMap(
+    this.curTurn = Marker.X;
+    this.board = new Marker[3][3];
+    this.winmap = Arrays.stream(Line.values()).collect(Collectors.toMap(
         Function.identity(),
-        line -> Pair.create(0, 0)
+        line -> IntPair.create(0, 0)
     ));
+    this.winner = Optional.empty();
   }
 
   public Optional<Marker> makeMove(int col, int row) {
@@ -50,12 +50,12 @@ public abstract class BaseBoard implements Board {
       List<Line> linesToUpdate = Line.getLinesToUpdate(col, row);
 
       for (Line line : linesToUpdate) {
-        Pair cur = winmap.get(line);
-        Pair newScore;
+        IntPair cur = winmap.get(line);
+        IntPair newScore;
         if (curTurn.equals(Marker.X)) {
-          newScore = ImmutablePair.builder().from(cur).x(cur.getX() + 1).build();
+          newScore = ImmutableIntPair.builder().from(cur).x(cur.getX() + 1).build();
         } else {
-          newScore = ImmutablePair.builder().from(cur).y(cur.getY() + 1).build();
+          newScore = ImmutableIntPair.builder().from(cur).y(cur.getY() + 1).build();
         }
         if (newScore.getX() == 3 || newScore.getY() == 3) {
           winner = Optional.of(curTurn);
@@ -72,11 +72,11 @@ public abstract class BaseBoard implements Board {
     return (col >= 0 && col < 3) && (row >= 0 && row < 3);
   }
 
-  public abstract Set<Pair> getNextActions();
+  public abstract Set<IntPair> getNextActions();
 
-  public abstract Map<Pair, Map<Double, List<Board>>> getNextStates();
+  public abstract Map<IntPair, Map<Double, List<Board>>> getNextStates();
 
-  public Map<Line, Pair> getWinmap() {
+  public Map<Line, IntPair> getWinmap() {
     return winmap;
   }
 
@@ -121,5 +121,9 @@ public abstract class BaseBoard implements Board {
       display.append(curTurn.toString()).append("'s turn.\n");
     }
     return display.toString();
+  }
+
+  public void reset() {
+    initialize();
   }
 }

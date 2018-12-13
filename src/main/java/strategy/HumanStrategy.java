@@ -1,12 +1,13 @@
 package strategy;
 
 import java.io.InputStreamReader;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import models.IntPair;
 import models.Marker;
-import models.Pair;
 import variants.board.Board;
 
 public class HumanStrategy implements Strategy {
@@ -18,7 +19,7 @@ public class HumanStrategy implements Strategy {
     this.scanner = new Scanner(new InputStreamReader(System.in));
   }
 
-  public Pair getNextMove(Board board, Marker ownMarker) {
+  public IntPair getNextMove(Board board, Marker ownMarker) {
     System.out.println(board.getDisplayAsString());
     System.out.println("Input your next move: ");
     while (scanner.hasNext()) {
@@ -29,12 +30,28 @@ public class HumanStrategy implements Strategy {
         char col = moveMatcher.group(1).toLowerCase().charAt(0);
         int colInt = Character.getNumericValue(col) - 10;
         int row = Integer.parseInt(moveMatcher.group(2)) - 1;
-        return Pair.create(colInt, row);
+        return IntPair.create(colInt, row);
       } else {
         System.out.println("Invalid move (format must match something like A1), try again:");
       }
     }
     throw new RuntimeException("wtf?");
+  }
+
+
+  @Override
+  public void onGameEnd(Optional<Boolean> didWin) {
+    // nothing needs to be done for human player
+  }
+
+  @Override
+  public boolean isReady() {
+    return true;
+  }
+
+  @Override
+  public void prep() {
+    // nothing needs to be done for human player
   }
 
 }

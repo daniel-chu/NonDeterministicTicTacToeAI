@@ -1,12 +1,13 @@
 package strategy.search;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import models.IntPair;
 import models.Marker;
-import models.Pair;
 import strategy.Strategy;
 import variants.board.Board;
 
@@ -20,20 +21,28 @@ public class SearchStrategy implements Strategy {
     this.discount = discount;
   }
 
-  public Pair getNextMove(Board board, Marker ownMarker) {
+  public IntPair getNextMove(Board board, Marker ownMarker) {
     System.out.println(board.getDisplayAsString());
-    Map<Pair, Map<Double, List<Board>>> selActionToProbsToStates = board.getNextStates();
-    Pair bestAction = null;
+    Map<IntPair, Map<Double, List<Board>>> selActionToProbsToStates = board.getNextStates();
+    List<IntPair> bestActions = new ArrayList<>();
     double bestScore = -Double.MAX_VALUE;
-    for (Pair requestedAction : selActionToProbsToStates.keySet()) {
+    for (IntPair requestedAction : selActionToProbsToStates.keySet()) {
       Map<Double, List<Board>> probsToBoards = selActionToProbsToStates.get(requestedAction);
       double valForRequestedAction = getValueForPotentialBoardDistribution(probsToBoards, maxDepth, ownMarker);
       if (valForRequestedAction > bestScore) {
-        bestAction = requestedAction;
+        bestActions = new ArrayList<>();
+        bestActions.add(requestedAction);
         bestScore = valForRequestedAction;
+      } else if (Math.abs(valForRequestedAction - bestScore) < 0.0001) {
+        bestActions.add(requestedAction);
       }
     }
-    return bestAction;
+    return bestActions.get((int) (Math.random() * bestActions.size()));
+  }
+
+  @Override
+  public void onGameEnd(Optional<Boolean> didWin) {
+    // nothing needs to be done for search strategies
   }
 
   private double getValueOfBoard(Board board, Marker ownMarker, int depth) {
@@ -51,12 +60,12 @@ public class SearchStrategy implements Strategy {
   }
 
   private double evaluateBoardWithHeuristic(Board board, Marker ownMarker) {
-    Pair totalsPair = board.getWinmap().keySet()
+    IntPair totalsPair = board.getWinmap().keySet()
         .stream()
         .map(board.getWinmap()::get)
         .filter(pair -> pair.getX() == 0 || pair.getY() == 0)
-        .reduce(Pair.create(0, 0), (pair1, pair2) ->
-            Pair.create(pair1.getX() + pair2.getX(), pair1.getY() + pair2.getY())
+        .reduce(IntPair.create(0, 0), (pair1, pair2) ->
+            IntPair.create(pair1.getX() + pair2.getX(), pair1.getY() + pair2.getY())
         );
 
     int multiplier = ownMarker == Marker.X ? 1 : -1;
@@ -74,9 +83,9 @@ public class SearchStrategy implements Strategy {
   }
 
   private double findVal(Board board, Marker ownMarker, int depth, Comparator<Double> comparator, double initValue) {
-    Map<Pair, Map<Double, List<Board>>> selActionToProbsToStates = board.getNextStates();
+    Map<IntPair, Map<Double, List<Board>>> selActionToProbsToStates = board.getNextStates();
     double score = initValue;
-    for (Pair requestedAction : selActionToProbsToStates.keySet()) {
+    for (IntPair requestedAction : selActionToProbsToStates.keySet()) {
       Map<Double, List<Board>> probsToBoards = selActionToProbsToStates.get(requestedAction);
       double valForRequestedAction = getValueForPotentialBoardDistribution(probsToBoards, depth, ownMarker);
       if (comparator.compare(valForRequestedAction, score) > 0) {
@@ -93,10 +102,23 @@ public class SearchStrategy implements Strategy {
     for (Double prob : probsToBoards.keySet()) {
       List<Board> possibleBoards = probsToBoards.get(prob);
       for (Board selectedBoard : possibleBoards) {
-        double val = getValueOfBoard(selectedBoard, ownMarker, depth - 1);
+        int nextDepth = selectedBoard.getCurTurn().equals(ownMarker)
+            ? depth - 1
+            : depth;
+        double val = getValueOfBoard(selectedBoard, ownMarker, nextDepth);
         valForRequestedAction += val * prob;
       }
     }
     return valForRequestedAction;
+  }
+
+  @Override
+  public boolean isReady() {
+    return true;
+  }
+
+  @Override
+  public void prep() {
+    // nothing needs to be done for search agent
   }
 }

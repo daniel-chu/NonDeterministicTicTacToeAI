@@ -11,10 +11,10 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import models.ImmutablePair;
+import models.ImmutableIntPair;
+import models.IntPair;
 import models.Line;
 import models.Marker;
-import models.Pair;
 
 public class StandardBoard extends BaseBoard {
 
@@ -23,19 +23,19 @@ public class StandardBoard extends BaseBoard {
   }
 
   public StandardBoard(Marker[][] board,
-                       Map<Line, Pair> winmap,
+                       Map<Line, IntPair> winmap,
                        Marker curTurn,
                        Optional<Marker> winner) {
     super(board, winmap, curTurn, winner);
   }
 
   @Override
-  public Set<Pair> getNextActions() {
-    Set<Pair> result = new HashSet<>();
+  public Set<IntPair> getNextActions() {
+    Set<IntPair> result = new HashSet<>();
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 3; j++) {
         if (board[i][j] == null) {
-          result.add(ImmutablePair.builder().x(i).y(j).build());
+          result.add(ImmutableIntPair.builder().x(i).y(j).build());
         }
       }
     }
@@ -43,8 +43,8 @@ public class StandardBoard extends BaseBoard {
   }
 
   @Override
-  public Map<Pair, Map<Double, List<Board>>> getNextStates() {
-    Set<Pair> nextActions = getNextActions();
+  public Map<IntPair, Map<Double, List<Board>>> getNextStates() {
+    Set<IntPair> nextActions = getNextActions();
     return nextActions.stream().collect(Collectors.toMap(
         Function.identity(),
         pair -> {
@@ -62,10 +62,10 @@ public class StandardBoard extends BaseBoard {
     for (int i = 0; i < 3; i++) {
       copyBoard[i] = Arrays.copyOf(board[i], 3);
     }
-    Map<Line, Pair> copyWinmap = winmap.keySet().stream()
+    Map<Line, IntPair> copyWinmap = winmap.keySet().stream()
         .collect(Collectors.toMap(
             Function.identity(),
-            line -> ImmutablePair.builder().from(winmap.get(line)).build()
+            line -> ImmutableIntPair.builder().from(winmap.get(line)).build()
         ));
     return new StandardBoard(copyBoard, copyWinmap, curTurn, winner);
   }

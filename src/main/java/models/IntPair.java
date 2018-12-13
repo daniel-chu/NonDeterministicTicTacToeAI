@@ -3,15 +3,15 @@ package models;
 import org.immutables.value.Value;
 
 @Value.Immutable
-public interface Pair {
+public interface IntPair {
   int getX();
   int getY();
 
-  static Pair create(int x, int y) {
-    return ImmutablePair.builder().x(x).y(y).build();
+  static IntPair create(int x, int y) {
+    return ImmutableIntPair.builder().x(x).y(y).build();
   }
 
-  static String getDisplayCoordinatesForPair(Pair pair) {
+  static String getDisplayCoordinatesForPair(IntPair pair) {
     char colSymbol = pair.getX() == 0
         ? 'A'
         : (pair.getX() == 1 ? 'B' : 'C');
