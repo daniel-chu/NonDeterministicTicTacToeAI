@@ -1,12 +1,10 @@
 package strategy;
 
-import java.util.Optional;
-
 public class StrategyFactory {
   public static Strategy createStrategy(String strategy,
                                         int depth,
-                                        Optional<Double> learningRate,
-                                        Optional<Double> exploreRate,
+                                        double learningRate,
+                                        double exploreRate,
                                         double discount) {
     switch (strategy) {
       case "human":
@@ -14,11 +12,11 @@ public class StrategyFactory {
       case "search":
         return new SearchStrategy(depth, discount);
       case "qlearning":
-        return new QLearningStrategy(learningRate.orElse(0.3), exploreRate.orElse(0.2), discount);
+        return new QLearningStrategy(learningRate, exploreRate, discount);
       case "random":
         return new RandomStrategy();
       default:
-        throw new IllegalArgumentException(String.format("Invalid strategy name: %s, must be one of [human, search, qlearning]", strategy));
+        throw new IllegalArgumentException(String.format("Invalid strategy name: %s, must be one of [human, search, qlearning, random]", strategy));
     }
   }
 }

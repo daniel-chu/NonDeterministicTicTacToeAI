@@ -17,16 +17,16 @@ public class Runner {
   private String gamemode = "standard";
 
   @Parameter(names = {"-p1", "--playerOneStrategy"}, description = "Strategy for player one")
-  private String p1Strategy = "human";
+  private String p1Strategy = "random";
 
   @Parameter(names = {"-p2", "--playerTwoStrategy"}, description = "Strategy for player two")
-  private String p2Strategy = "simplesearch";
+  private String p2Strategy = "qlearning";
 
   @Parameter(names = {"-c", "--moveSuccessChance"}, description = "Chance your move will go where you want it to")
   private double moveSuccessChance = 0.7;
 
   @Parameter(names = {"-i", "--iterations"}, description = "How many games to play")
-  private int iterations = 1;
+  private int iterations = 100;
 
   @Parameter(names = {"-t", "--trainingIterations"}, description = "How many games a Q learning agent will play before they start getting counted towards score")
   private int trainingIterations = 10000;
@@ -35,10 +35,10 @@ public class Runner {
   private int depth = 2;
 
   @Parameter(names = {"-l", "--learningRate"}, description = "Learning rate for Q learning agent")
-  private double learningRate = -1;
+  private double learningRate = 0.3;
 
   @Parameter(names = {"-e", "--exploreRate"}, description = "Exploration rate for Q learning agent")
-  private double exploreRate = -1;
+  private double exploreRate = 0.3;
 
   @Parameter(names = {"-d", "--discount"}, description = "Discount rate")
   private double discount = 0.95;
@@ -55,16 +55,13 @@ public class Runner {
         p2Strategy
     ));
 
-    Optional<Double> maybeLearningRate = learningRate < 0 ? Optional.empty() : Optional.of(learningRate);
-    Optional<Double> maybeExplorationRate = exploreRate < 0 ? Optional.empty() : Optional.of(exploreRate);
-
     Player p1 = ImmutablePlayer.builder()
         .marker(Marker.X)
-        .strategy(StrategyFactory.createStrategy(p1Strategy, depth, maybeLearningRate, maybeExplorationRate, discount))
+        .strategy(StrategyFactory.createStrategy(p1Strategy, depth, learningRate, exploreRate, discount))
         .build();
     Player p2 = ImmutablePlayer.builder()
         .marker(Marker.O)
-        .strategy(StrategyFactory.createStrategy(p2Strategy, depth, maybeLearningRate, maybeExplorationRate, discount))
+        .strategy(StrategyFactory.createStrategy(p2Strategy, depth, learningRate, exploreRate, discount))
         .build();
 
     List<Player> players = Arrays.asList(p1, p2);
@@ -74,7 +71,7 @@ public class Runner {
       }
       Player trainingPlayer = ImmutablePlayer.builder()
           .marker(player.getMarker().equals(Marker.X) ? Marker.O : Marker.X)
-          .strategy(StrategyFactory.createStrategy(trainingAgentStrategy, depth, maybeLearningRate, maybeExplorationRate, discount))
+          .strategy(StrategyFactory.createStrategy(trainingAgentStrategy, depth, learningRate, exploreRate, discount))
           .build();
 
       TicTacToe game;

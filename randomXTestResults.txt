@@ -6,7 +6,7 @@ Takeaways:
 - In this version of Tic Tac Toe, win rates of Random are higher due to the non-determinism involved.
   However, we still see that Search and Q-Learning Agents are able to win the vast majority of games against a Random agent.
 - It's interesting that Search vs. Search is pretty evenly matched here, while they draw 100% of the time in the standard version of the game.
-- Q-Learning is able to hold its own against Search a bit better than in Standard, although to be honest its failure in Standard is probably a bug somewhere (didn't win at all with first turn advantage)
+- Q-Learning is able to hold its own against Search a bit better than in Standard, since in Standard the Search Agent played perfectly, holding it to 0 wins.
 
 ========================
 Random vs Random
